@@ -52,11 +52,11 @@ export class InfrastructureStack extends Stack {
             }),
         });
 
-        // const application = new InfrastructureStage(this, branch);
-        // const applicationStage = pipeline.addApplicationStage(application);
-        //
-        // if (manualApproval) {
-        //     applicationStage.addManualApprovalAction();
-        // }
+        const application = new InfrastructureStage(this, branch);
+        const applicationStage = pipeline.addApplicationStage(application);
+
+        if (manualApproval) {
+            applicationStage.addManualApprovalAction();
+        }
     }
 }
