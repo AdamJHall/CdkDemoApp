@@ -43,6 +43,9 @@ export class DataApi extends Stack {
         const applicationContainer = taskDef.addContainer(
             "app",
             {
+                healthCheck: {
+                    command: ["CMD-SHELL", 'php-fpm-healthcheck || exit 1']
+                },
                 image: ContainerImage.fromAsset(
                     path.resolve(__dirname, '../data-api/'),
                     {
@@ -53,8 +56,8 @@ export class DataApi extends Stack {
         );
 
         applicationContainer.addPortMappings({
-            hostPort: 3000,
-            containerPort: 3000,
+            hostPort: 9000,
+            containerPort: 9000,
             protocol: Protocol.TCP
         })
 

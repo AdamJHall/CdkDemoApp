@@ -1,4 +1,4 @@
-FROM php:8.0-fpm
+FROM php:8.0-fpm-alpine
 
 COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
 COPY docker/php/conf.d/ $PHP_INI_DIR/conf.d/
@@ -9,6 +9,13 @@ VOLUME /var/run/php
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
+
+# Add php-fpm health check helper
+RUN apk add --no-cache fcgi
+
+RUN curl -o /usr/local/bin/php-fpm-healthcheck \
+   -k https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/v0.5.0/php-fpm-healthcheck \
+    && chmod +x /usr/local/bin/php-fpm-healthcheck
 
 WORKDIR /srv/api
 
