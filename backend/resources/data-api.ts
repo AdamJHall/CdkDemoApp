@@ -18,7 +18,7 @@ export class DataApi extends Stack {
         });
 
         const taskDef = new FargateTaskDefinition(this, 'APITaskDefinition', {
-            cpu: 1024,
+            cpu: 256,
             memoryLimitMiB: 512,
         });
 
@@ -63,7 +63,7 @@ export class DataApi extends Stack {
             "ApiService",
             {
                 cluster: cluster,
-                cpu: 1024,
+                cpu: 256,
                 memoryLimitMiB: 512,
                 desiredCount: 1,
                 taskDefinition: taskDef,
