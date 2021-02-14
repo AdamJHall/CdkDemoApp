@@ -1,7 +1,7 @@
 import {Construct, Stack, StackProps} from "@aws-cdk/core";
 import * as ecsPatterns from "@aws-cdk/aws-ecs-patterns";
 import {Vpc} from "@aws-cdk/aws-ec2";
-import {Cluster, ContainerImage, FargateTaskDefinition, Protocol} from "@aws-cdk/aws-ecs";
+import {Cluster, ContainerImage, FargateTaskDefinition, Protocol, AwsLogDriver} from "@aws-cdk/aws-ecs";
 import * as path from "path";
 
 export class DataApi extends Stack {
@@ -22,9 +22,14 @@ export class DataApi extends Stack {
             memoryLimitMiB: 512,
         });
 
+        const logging = new AwsLogDriver({
+            streamPrefix: "data-api",
+        })
+
         const proxyContainer = taskDef.addContainer(
             "nginx",
             {
+                logging,
                 image: ContainerImage.fromAsset(
                     path.resolve(__dirname, '../data-api/'),
                     {
@@ -43,6 +48,7 @@ export class DataApi extends Stack {
         const applicationContainer = taskDef.addContainer(
             "app",
             {
+                logging,
                 healthCheck: {
                     command: ["CMD-SHELL", 'php-fpm-healthcheck || exit 1']
                 },
