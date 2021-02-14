@@ -17,7 +17,7 @@ RUN curl -o /usr/local/bin/php-fpm-healthcheck \
    -k https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/v0.5.0/php-fpm-healthcheck \
     && chmod +x /usr/local/bin/php-fpm-healthcheck
 
-WORKDIR /srv/api
+WORKDIR /srv/app
 
 # build for production
 ARG APP_ENV=prod

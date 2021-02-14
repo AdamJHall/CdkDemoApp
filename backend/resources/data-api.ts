@@ -24,7 +24,7 @@ export class DataApi extends Stack {
 
         const logging = new AwsLogDriver({
             streamPrefix: "data-api",
-        })
+        });
 
         const proxyContainer = taskDef.addContainer(
             "nginx",
@@ -43,7 +43,7 @@ export class DataApi extends Stack {
             hostPort: 80,
             containerPort: 80,
             protocol: Protocol.TCP
-        })
+        });
 
         const applicationContainer = taskDef.addContainer(
             "app",
@@ -65,7 +65,7 @@ export class DataApi extends Stack {
             hostPort: 9000,
             containerPort: 9000,
             protocol: Protocol.TCP
-        })
+        });
 
         const loadBalancedFargateService = new ecsPatterns.ApplicationMultipleTargetGroupsFargateService(
             this,
