@@ -1,7 +1,7 @@
 import {Construct, Stack, StackProps} from "@aws-cdk/core";
 import * as ecsPatterns from "@aws-cdk/aws-ecs-patterns";
-import { Vpc } from "@aws-cdk/aws-ec2";
-import { Cluster, FargateTaskDefinition, ContainerImage, Protocol } from "@aws-cdk/aws-ecs";
+import {Vpc} from "@aws-cdk/aws-ec2";
+import {Cluster, ContainerImage, FargateTaskDefinition, Protocol} from "@aws-cdk/aws-ecs";
 import * as path from "path";
 
 export class DataApi extends Stack {
@@ -47,9 +47,9 @@ export class DataApi extends Stack {
         );
 
         proxyContainer.addPortMappings({
-            containerPort: 80,
             hostPort: 80,
-            protocol: Protocol.TCP,
+            containerPort: 80,
+            protocol: Protocol.TCP
         });
 
         const loadBalancedFargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(
@@ -62,7 +62,7 @@ export class DataApi extends Stack {
                 desiredCount: 1,
                 taskDefinition: taskDef,
                 assignPublicIp: true,
-                listenerPort: 80
+                listenerPort: 80,
             }
         );
     }
