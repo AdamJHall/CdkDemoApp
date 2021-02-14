@@ -2,22 +2,22 @@ import {Construct, Stage, Stack, StackProps, SecretValue, StageProps} from '@aws
 import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import {CdkPipeline, SimpleSynthAction} from "@aws-cdk/pipelines";
+import {DataApi} from "../backend/resources";
 
 export class InfrastructureStage extends Stage {
     constructor(scope: Construct, id: string, props?: StageProps) {
         super(scope, id, props);
+
+        new DataApi(this, 'DataApi', {});
     }
 }
 
-interface InfrastructureStackProps extends StackProps {
-}
-
 export class InfrastructureStack extends Stack {
-    constructor(scope: Construct, id: string, props?: InfrastructureStackProps) {
+    constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
 
-        this.createPipeline('PreProduction');
-        this.createPipeline('Production', true);
+        this.createPipeline('staging');
+        this.createPipeline('production', true);
     }
 
     /**
@@ -39,9 +39,9 @@ export class InfrastructureStack extends Stack {
             sourceAction: new codepipeline_actions.GitHubSourceAction({
                 actionName: 'GitHub',
                 output: sourceArtifact,
-                oauthToken: SecretValue.secretsManager('/github.com/token/repo-name'),
-                owner: 'OWNER',
-                repo: 'REPO',
+                oauthToken: SecretValue.secretsManager('/github.com/token'),
+                owner: 'AdamJHall',
+                repo: 'CdkDemoApp',
                 branch: branch
             }),
 
@@ -51,5 +51,12 @@ export class InfrastructureStack extends Stack {
                 cloudAssemblyArtifact,
             }),
         });
+
+        const application = new InfrastructureStage(this, branch);
+        const applicationStage = pipeline.addApplicationStage(application);
+
+        if (manualApproval) {
+            applicationStage.addManualApprovalAction();
+        }
     }
 }
