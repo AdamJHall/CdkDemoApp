@@ -34,6 +34,12 @@ export class DataApi extends Stack {
             }
         );
 
+        applicationContainer.addPortMappings({
+            hostPort: 3000,
+            containerPort: 3000,
+            protocol: Protocol.TCP
+        })
+
         const proxyContainer = taskDef.addContainer(
             "nginx",
             {
