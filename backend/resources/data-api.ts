@@ -67,8 +67,7 @@ export class DataApi extends Stack {
                 memoryLimitMiB: 512,
                 desiredCount: 1,
                 taskDefinition: taskDef,
-                assignPublicIp: true,
-                listenerPort: 80,
+                assignPublicIp: true
             }
         );
     }
