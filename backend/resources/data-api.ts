@@ -22,6 +22,18 @@ export class DataApi extends Stack {
             memoryLimitMiB: 512,
         });
 
+        const proxyContainer = taskDef.addContainer(
+            "nginx",
+            {
+                image: ContainerImage.fromAsset(
+                    path.resolve(__dirname, '../data-api/'),
+                    {
+                        file: 'docker/nginx/Dockerfile'
+                    }
+                )
+            }
+        );
+
         const applicationContainer = taskDef.addContainer(
             "app",
             {
@@ -39,24 +51,6 @@ export class DataApi extends Stack {
             containerPort: 3000,
             protocol: Protocol.TCP
         })
-
-        const proxyContainer = taskDef.addContainer(
-            "nginx",
-            {
-                image: ContainerImage.fromAsset(
-                    path.resolve(__dirname, '../data-api/'),
-                    {
-                        file: 'docker/nginx/Dockerfile'
-                    }
-                )
-            }
-        );
-
-        proxyContainer.addPortMappings({
-            hostPort: 80,
-            containerPort: 80,
-            protocol: Protocol.TCP
-        });
 
         const loadBalancedFargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(
             this,
