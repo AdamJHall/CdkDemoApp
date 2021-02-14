@@ -58,7 +58,7 @@ export class DataApi extends Stack {
             protocol: Protocol.TCP
         })
 
-        const loadBalancedFargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(
+        const loadBalancedFargateService = new ecsPatterns.ApplicationMultipleTargetGroupsFargateService(
             this,
             "ApiService",
             {
