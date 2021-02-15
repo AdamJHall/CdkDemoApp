@@ -17,7 +17,7 @@ export class InfrastructureStack extends Stack {
         super(scope, id, props);
 
         this.createPipeline('staging');
-        // this.createPipeline('production', true);
+        this.createPipeline('production', true);
     }
 
     /**
