@@ -12,25 +12,20 @@ export class InfrastructureStage extends Stage {
     }
 }
 
+export interface InfrastructureStackProps extends StackProps {
+    branch: string,
+    manualApprovals?: boolean
+}
+
 export class InfrastructureStack extends Stack {
-    constructor(scope: Construct, id: string, props?: StackProps) {
+    constructor(scope: Construct, id: string, props?: InfrastructureStackProps) {
         super(scope, id, props);
 
-        this.createPipeline('staging');
-        this.createPipeline('production', true);
-    }
-
-    /**
-     * Create a cdk pipeline for a specific github branch
-     * @param branch
-     * @param manualApproval
-     * @private
-     */
-    private createPipeline(branch: string, manualApproval = false) {
         const sourceArtifact = new codepipeline.Artifact();
         const cloudAssemblyArtifact = new codepipeline.Artifact();
+        const branch = props?.branch ?? 'main';
 
-        const pipeline = new CdkPipeline(this, branch + 'Pipeline', {
+        const pipeline = new CdkPipeline(this, 'Pipeline', {
             pipelineName: branch + 'Pipeline',
             cloudAssemblyArtifact,
             sourceAction: new codepipeline_actions.GitHubSourceAction({
@@ -39,11 +34,12 @@ export class InfrastructureStack extends Stack {
                 oauthToken: SecretValue.secretsManager('/github.com/token'),
                 owner: 'AdamJHall',
                 repo: 'CdkDemoApp',
-                branch: branch
+                branch
             }),
             synthAction: SimpleSynthAction.standardNpmSynth({
                 sourceArtifact,
                 cloudAssemblyArtifact,
+                synthCommand: 'cdk synth ' + id
             }),
         });
 
@@ -51,7 +47,7 @@ export class InfrastructureStack extends Stack {
         const applicationStage = pipeline.addApplicationStage(
             application,
             {
-                manualApprovals: manualApproval
+                    manualApprovals: props?.manualApprovals ?? false
             }
         );
     }
