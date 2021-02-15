@@ -39,7 +39,7 @@ export class InfrastructureStack extends Stack {
             synthAction: SimpleSynthAction.standardNpmSynth({
                 sourceArtifact,
                 cloudAssemblyArtifact,
-                synthCommand: 'cdk synth ' + id
+                synthCommand: 'npx cdk synth ' + id
             }),
         });
 
