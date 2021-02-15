@@ -8,15 +8,19 @@ new InfrastructureStack(
     app,
     'staging-infrastructure-stack',
     {
+        owner: 'AdamJHall',
+        repo: 'CdkDemoApp',
         branch: 'staging'
     }
 );
-// new InfrastructureStack(
-//     app,
-//     'production-infrastructure-stack',
-//     {
-//         branch: 'production',
-//         manualApprovals: true
-//     }
-// );
+new InfrastructureStack(
+    app,
+    'production-infrastructure-stack',
+    {
+        owner: 'AdamJHall',
+        repo: 'CdkDemoApp',
+        branch: 'production',
+        manualApprovals: true
+    }
+);
 app.synth();

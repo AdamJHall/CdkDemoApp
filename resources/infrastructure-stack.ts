@@ -13,17 +13,19 @@ export class InfrastructureStage extends Stage {
 }
 
 export interface InfrastructureStackProps extends StackProps {
-    branch: string,
+    owner: string,
+    repo: string,
+    branch?: string,
     manualApprovals?: boolean
 }
 
 export class InfrastructureStack extends Stack {
-    constructor(scope: Construct, id: string, props?: InfrastructureStackProps) {
+    constructor(scope: Construct, id: string, props: InfrastructureStackProps) {
         super(scope, id, props);
 
         const sourceArtifact = new codepipeline.Artifact();
         const cloudAssemblyArtifact = new codepipeline.Artifact();
-        const branch = props?.branch ?? 'main';
+        const branch = props.branch ?? 'main';
 
         const pipeline = new CdkPipeline(this, 'Pipeline', {
             pipelineName: branch + 'Pipeline',
@@ -32,8 +34,8 @@ export class InfrastructureStack extends Stack {
                 actionName: 'GitHub',
                 output: sourceArtifact,
                 oauthToken: SecretValue.secretsManager('/github.com/token'),
-                owner: 'AdamJHall',
-                repo: 'CdkDemoApp',
+                owner: props.owner,
+                repo: props.repo,
                 branch
             }),
             synthAction: SimpleSynthAction.standardNpmSynth({
@@ -47,7 +49,7 @@ export class InfrastructureStack extends Stack {
         const applicationStage = pipeline.addApplicationStage(
             application,
             {
-                    manualApprovals: props?.manualApprovals ?? false
+                    manualApprovals: props.manualApprovals ?? false
             }
         );
     }
