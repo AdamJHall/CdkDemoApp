@@ -31,11 +31,8 @@ export class InfrastructureStack extends Stack {
         const cloudAssemblyArtifact = new codepipeline.Artifact();
 
         const pipeline = new CdkPipeline(this, branch + 'Pipeline', {
-            // The pipeline name
             pipelineName: branch + 'Pipeline',
             cloudAssemblyArtifact,
-
-            // Where the source can be found
             sourceAction: new codepipeline_actions.GitHubSourceAction({
                 actionName: 'GitHub',
                 output: sourceArtifact,
@@ -44,8 +41,6 @@ export class InfrastructureStack extends Stack {
                 repo: 'CdkDemoApp',
                 branch: branch
             }),
-
-            // How it will be built and synthesized
             synthAction: SimpleSynthAction.standardNpmSynth({
                 sourceArtifact,
                 cloudAssemblyArtifact,
@@ -53,10 +48,11 @@ export class InfrastructureStack extends Stack {
         });
 
         const application = new InfrastructureStage(this, branch);
-        const applicationStage = pipeline.addApplicationStage(application);
-
-        if (manualApproval) {
-            applicationStage.addManualApprovalAction();
-        }
+        const applicationStage = pipeline.addApplicationStage(
+            application,
+            {
+                manualApprovals: manualApproval
+            }
+        );
     }
 }
