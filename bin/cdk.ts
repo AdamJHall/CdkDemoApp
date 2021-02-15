@@ -11,12 +11,12 @@ new InfrastructureStack(
         branch: 'staging'
     }
 );
-new InfrastructureStack(
-    app,
-    'production-infrastructure-stack',
-    {
-        branch: 'production',
-        manualApprovals: true
-    }
-);
+// new InfrastructureStack(
+//     app,
+//     'production-infrastructure-stack',
+//     {
+//         branch: 'production',
+//         manualApprovals: true
+//     }
+// );
 app.synth();
