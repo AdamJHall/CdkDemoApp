@@ -2,17 +2,21 @@ version: 2
 updates:
   - package-ecosystem: docker
     directory: "/backend/data-api/docker/nginx/"
+    target_branch: "staging"
     schedule:
       interval: "weekly"
   - package-ecosystem: docker
     directory: "/backend/data-api/docker/php/"
+    target_branch: "staging"
     schedule:
       interval: "weekly"
   - package-ecosystem: composer
     directory: "/backend/data-api/"
+    target_branch: "staging"
     schedule:
       interval: "daily"
   - package-ecosystem: "npm"
     directory: "/"
+    target_branch: "staging"
     schedule:
       interval: "daily"
