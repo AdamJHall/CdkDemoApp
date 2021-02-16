@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine
+FROM php:7.4-fpm-alpine
 
 COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
 COPY docker/php/conf.d/ $PHP_INI_DIR/conf.d/
