@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: docker
+    directory: "/backend/data-api/docker/nginx/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: docker
+    directory: "/backend/data-api/docker/php/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: composer
+    directory: "/backend/data-api/"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
